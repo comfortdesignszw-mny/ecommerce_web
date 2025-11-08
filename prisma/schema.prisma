@@ -85,49 +85,11 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id])
 }
 
-enum AdminRole {
-  SUPER_ADMIN
-  REGULAR
-}
-
-enum AdminStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
-enum ProductCategory {
-  SMARTPHONES
-  LAPTOPS
-  TABLETS
-  ACCESSORIES
-}
-
-enum ProductStatus {
-  ACTIVE
-  INACTIVE
-  OUT_OF_STOCK
-}
-
-enum PaymentMethod {
-  CASH_ON_DELIVERY
-  BANK_TRANSFER
-  ECOCASH
-  PAYPAL
-  PAYNOW
-  INNBUCKS
-}
-
-enum PaymentStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-enum OrderStatus {
-  PLACED
-  PAYMENT_NOT_DONE
-  PAYMENT_PROCESSED
-  FULFILLED
-}
+// Note: Enums converted to strings for SQLite compatibility
+// AdminRole: SUPER_ADMIN, REGULAR
+// AdminStatus: PENDING, APPROVED, REJECTED
+// ProductCategory: SMARTPHONES, LAPTOPS, TABLETS, ACCESSORIES
+// ProductStatus: ACTIVE, INACTIVE, OUT_OF_STOCK
+// PaymentMethod: CASH_ON_DELIVERY, BANK_TRANSFER, ECOCASH, PAYPAL, PAYNOW, INNBUCKS
+// PaymentStatus: PENDING, PROCESSING, COMPLETED, FAILED
+// OrderStatus: PLACED, PAYMENT_NOT_DONE, PAYMENT_PROCESSED, FULFILLED
