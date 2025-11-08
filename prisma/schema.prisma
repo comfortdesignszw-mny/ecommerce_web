@@ -54,8 +54,8 @@ model Product {
 }
 
 model Order {
-  id              String        @id @default(cuid())
-  orderNumber     String        @unique
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique
   userId          String?
   customerName    String
   customerEmail   String
@@ -63,16 +63,16 @@ model Order {
   shippingAddress String
   orderNotes      String?
   subtotal        Float
-  shippingCost    Float         @default(0)
+  shippingCost    Float    @default(0)
   totalAmount     Float
-  paymentMethod   PaymentMethod
-  paymentStatus   PaymentStatus @default(PENDING)
-  orderStatus     OrderStatus   @default(PLACED)
+  paymentMethod   String   // CASH_ON_DELIVERY, BANK_TRANSFER, ECOCASH, PAYPAL, PAYNOW, INNBUCKS
+  paymentStatus   String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  orderStatus     String   @default("PLACED") // PLACED, PAYMENT_NOT_DONE, PAYMENT_PROCESSED, FULFILLED
   transactionId   String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   orderItems      OrderItem[]
-  user            User?         @relation(fields: [userId], references: [id])
+  user            User?    @relation(fields: [userId], references: [id])
 }
 
 model OrderItem {
