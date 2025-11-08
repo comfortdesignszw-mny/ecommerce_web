@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String
+  phone           String?
+  address         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  orders          Order[]
+}
+
+model AdminUser {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String
+  password  String     // hashed
+  role      AdminRole  @default(REGULAR)
+  status    AdminStatus @default(PENDING)
+  storeName String?
+  bio       String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  products  Product[]
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String
+  price       Float
+  category    ProductCategory
+  images      String[]        // Cloudinary URLs
+  stockQty    Int?
+  sku         String          @unique
+  status      ProductStatus   @default(ACTIVE)
+  adminId     String
+  admin       AdminUser       @relation(fields: [adminId], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  userId          String?
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  shippingAddress String
+  orderNotes      String?
+  subtotal        Float
+  shippingCost    Float         @default(0)
+  totalAmount     Float
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus @default(PENDING)
+  orderStatus     OrderStatus   @default(PLACED)
+  transactionId   String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  orderItems      OrderItem[]
+  user            User?         @relation(fields: [userId], references: [id])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  unitPrice Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  REGULAR
+}
+
+enum AdminStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ProductCategory {
+  SMARTPHONES
+  LAPTOPS
+  TABLETS
+  ACCESSORIES
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  BANK_TRANSFER
+  ECOCASH
+  PAYPAL
+  PAYNOW
+  INNBUCKS
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum OrderStatus {
+  PLACED
+  PAYMENT_NOT_DONE
+  PAYMENT_PROCESSED
+  FULFILLED
+}
